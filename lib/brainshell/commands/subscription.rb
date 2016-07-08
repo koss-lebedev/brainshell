@@ -1,7 +1,7 @@
 module Commands
   class Subscription < Thor
 
-    class_option :include, type: :array, default: []
+    class_option :columns, type: :array, default: []
 
     desc 'find ID', 'Returns subscription by identifier'
     def find(id)
@@ -34,17 +34,27 @@ module Commands
     end
 
     def render_row(subscription)
-      [
-          subscription.id,
-          subscription.price.to_f,
-          subscription.created_at,
-          subscription.plan_id,
-          subscription.status
-      ] + includes(subscription)
+      default_columns = [ subscription.id ]
+
+      default_columns + custom_columns(options[:columns], subscription)
     end
 
-    def includes(subscription)
-      options[:include].map { |include| subscription.send(include) }
+    def custom_columns(columns, subscription)
+      columns.map do |include|
+        value = subscription.send(include)
+        format_value(value)
+      end
+    end
+
+    def format_value(value)
+      case value
+        when BigDecimal
+          value.to_f
+        when DateTime
+          value.iso8601
+        else
+          value
+      end
     end
 
   end
