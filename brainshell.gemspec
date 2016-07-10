@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/koss-lebedev/brainshell'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.bindir        = 'exe'
+  spec.bindir        = 'bin'
   spec.executables   = ['brainshell']
   spec.require_paths = ['lib']
 

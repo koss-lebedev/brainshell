@@ -8,6 +8,30 @@ module Brainshell
 
       protected
 
+      def assign_range_criteria(search, field)
+        if criteria = options[field]
+          if criteria.match(/([\d.]+)\.\.([\d.]+)/)
+            search.send(field).between $1, $2
+          elsif criteria.match(/\Agt([\d.]+)/)
+            search.send(field) >= $1
+          elsif criteria.match(/\Alt([\d.]+)/)
+            search.send(field) <= $1
+          elsif criteria.match(/([\d.]+)/)
+            search.send(field).is $1
+          end
+        end
+      end
+
+      def assign_multiple_value_criteria(search, field)
+        if criteria = options[field]
+          if criteria.size == 1
+            search.send(field).is criteria
+          else
+            search.send(field).in criteria
+          end
+        end
+      end
+
       def build_table(objects)
         rows = []
         objects.each do |object|
