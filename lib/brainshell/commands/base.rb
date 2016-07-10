@@ -4,7 +4,7 @@ module Brainshell
 
       include ValueFormatter
 
-      class_option :columns, type: :array, default: []
+      class_option :columns, type: :array
 
       protected
 
@@ -41,7 +41,7 @@ module Brainshell
       end
 
       def render_row(object)
-        columns = default_columns + options[:columns]
+        columns = options[:columns] ? options[:columns] : default_columns
         columns.map { |column| get_column_value(object, column) }
       end
 
