@@ -7,6 +7,7 @@ require 'brainshell/commands/base'
 require 'brainshell/commands/customer'
 require 'brainshell/commands/subscription'
 require 'brainshell/commands/transaction'
+require 'brainshell/commands/credit_card'
 
 module Brainshell
 
@@ -20,6 +21,9 @@ module Brainshell
 
     desc 'transaction OPTIONS', 'Query Braintree transactions'
     subcommand 'transaction', Commands::Transaction
+
+    desc 'credit_card OPTIONS', 'Query Braintree credit cards'
+    subcommand 'credit_card', Commands::CreditCard
 
   end
 

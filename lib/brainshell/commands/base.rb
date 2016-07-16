@@ -6,7 +6,39 @@ module Brainshell
 
       class_option :columns, type: :array
 
-      protected
+      class << self
+
+        def define_query_options
+          multiple_search_fields.each do |field|
+            method_option field, type: :array
+          end
+          text_search_fields.each do |field|
+            method_option field
+          end
+          range_search_fields.each do |field|
+            method_option field
+          end
+        end
+
+        def text_search_fields; [] end
+        def multiple_search_fields; [] end
+        def range_search_fields; [] end
+
+      end
+
+    protected
+
+      def run_query(entity)
+        search_results = entity.search do |search|
+
+          self.class.text_search_fields.each { |field| assign_text_criteria(search, field) }
+          self.class.multiple_search_fields.each { |field| assign_multiple_value_criteria(search, field) }
+          self.class.range_search_fields.each { |field| assign_range_criteria(search, field) }
+
+        end
+
+        build_table(search_results.to_a)
+      end
 
       def assign_range_criteria(search, field)
         if criteria = options[field]
@@ -29,6 +61,12 @@ module Brainshell
           else
             search.send(field).in criteria
           end
+        end
+      end
+
+      def assign_text_criteria(search, field)
+        if criteria = options[field]
+          search.send(field).is criteria
         end
       end
 
