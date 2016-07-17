@@ -4,14 +4,17 @@ module Brainshell
     KNOWN_FORMAT_METHODS = {
         BigDecimal => :big_decimal,
         DateTime => :date_time,
-        Braintree::CreditCard => :payment_method,
-        Braintree::Subscription => :subscription
+        Braintree::CreditCard => :model_with_token,
+        Braintree::Subscription => :model_with_id
     }.freeze
 
     def format_value(value)
-      klass = value.is_a?(Array) ? value[0].class : value.class
-      format_method = KNOWN_FORMAT_METHODS[klass]
-      format_method ? send(format_method, value) : value
+      if value.is_a? Array
+        value.map { |item| format_value(item) }.join(',')
+      else
+        format_method = KNOWN_FORMAT_METHODS[value.class]
+        format_method ? send(format_method, value) : value
+      end
     end
 
   protected
@@ -24,12 +27,12 @@ module Brainshell
       value.iso8601
     end
 
-    def payment_method(value)
-      value.map(&:token)
+    def model_with_token(value)
+      value.token
     end
 
-    def subscription(value)
-      value.map(&:id)
+    def model_with_id(value)
+      value.id
     end
 
   end
