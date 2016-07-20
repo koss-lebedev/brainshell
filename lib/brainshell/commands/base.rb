@@ -70,16 +70,16 @@ module Brainshell
         end
       end
 
-      def build_table(objects)
+      def build_table(objects, columns = nil)
         rows = []
         objects.each do |object|
-          rows << render_row(object)
+          rows << render_row(object,columns)
         end
         shell.print_table(rows)
       end
 
-      def render_row(object)
-        columns = options[:columns] ? options[:columns] : default_columns
+      def render_row(object, columns)
+        columns = columns ||(options[:columns] ? options[:columns] : default_columns)
         columns.map { |column| get_column_value(object, column) }
       end
 
