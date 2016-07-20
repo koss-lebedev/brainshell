@@ -23,6 +23,13 @@ module Brainshell
         build_table([subscription])
       end
 
+      desc 'status_history ID', 'Get subscription status history by identifier'
+      def status_history(id)
+        subscription = Braintree::Subscription.find(id)
+
+        build_table(subscription.status_history, [:balance, :price, :status, :subscription_source])
+      end
+
       desc 'query OPTIONS', 'Find subscriptions matching criteria specified in options'
       define_query_options
       def query
