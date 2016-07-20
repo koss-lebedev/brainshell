@@ -8,6 +8,7 @@ require 'brainshell/commands/customer'
 require 'brainshell/commands/subscription'
 require 'brainshell/commands/transaction'
 require 'brainshell/commands/credit_card'
+require 'brainshell/commands/merchant_account'
 
 module Brainshell
 
@@ -24,6 +25,9 @@ module Brainshell
 
     desc 'credit_card OPTIONS', 'Query Braintree credit cards'
     subcommand 'credit_card', Commands::CreditCard
+
+    desc 'merchant_account OPTIONS', 'Query Braintree merchant accounts'
+    subcommand 'merchant_account', Commands::MerchantAccount
 
   end
 
